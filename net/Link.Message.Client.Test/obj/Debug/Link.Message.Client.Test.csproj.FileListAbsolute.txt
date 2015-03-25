@@ -1,0 +1,16 @@
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\Emb.Http.Client.Test\bin\Debug\Emb.Http.Client.Test.dll
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\Emb.Http.Client.Test\bin\Debug\Emb.Http.Client.Test.pdb
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\Emb.Http.Client.Test\bin\Debug\Link.Message.Client.dll
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\Emb.Http.Client.Test\bin\Debug\Newtonsoft.Json.dll
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\Emb.Http.Client.Test\bin\Debug\Link.Message.Client.pdb
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\Emb.Http.Client.Test\obj\Debug\Link.Message.Client.Test.csprojResolveAssemblyReference.cache
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\Emb.Http.Client.Test\obj\Debug\Emb.Http.Client.Test.dll
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\Emb.Http.Client.Test\obj\Debug\Emb.Http.Client.Test.pdb
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\bin\Debug\Emb.Http.Client.Test.dll
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\bin\Debug\Emb.Http.Client.Test.pdb
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\bin\Debug\Link.Message.Client.dll
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\bin\Debug\Newtonsoft.Json.dll
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\bin\Debug\Link.Message.Client.pdb
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\obj\Debug\Link.Message.Client.Test.csprojResolveAssemblyReference.cache
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\obj\Debug\Emb.Http.Client.Test.dll
+E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\obj\Debug\Emb.Http.Client.Test.pdb

@@ -2,9 +2,6 @@
 <wb-module deploy-name="bingo-web-project">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
 <wb-resource deploy-path="/" source-path="/WebRoot" tag="defaultRootSource"/>
-        <dependent-module archiveName="link-message-client-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/link-message-client/link-message-client">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="component.exclusion.patterns" value="**/.svn/"/>
         <property name="context-root" value="link-message-server-test"/>
 </wb-module>

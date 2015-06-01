@@ -39,6 +39,8 @@ import com.alibaba.fastjson.JSON;
 public class MessageClient {
 	private static final String TOKEN = "token";
 	private static final String SEND = "send";
+	
+	protected static final String INVALID_ACCESS_TOKEN = "invalid access_token";
 
 	private String embServiceUrl; // emb服务的地址，比如http://co3.gz-mstc.com:10082/svrnum/
 
@@ -107,6 +109,10 @@ public class MessageClient {
 			return accessToken;
 		}
 		
+		return getNewAccessToken();
+	}
+	
+	protected AccessToken getNewAccessToken() {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("grant_type", "client_credential"));
 		params.add(new BasicNameValuePair("appid", appId));
@@ -183,6 +189,27 @@ public class MessageClient {
 	 * @param messageReceivers 消息接收者
 	 */
 	public SendMessageResult sendMultiMessage(MessageContent messageContent, MultiMessageReceiver messageReceivers) {
+		SendMessageResult result = trySendMessage(messageContent, messageReceivers);
+		if (result.isSuccess()) {
+			return result;
+		}
+		
+		// 当如果发现是因为token过期而发送不成功时，尝试再重试一次
+		if (!result.isSuccess()&&null != result.getError()&&result.getError().toLowerCase().contains(INVALID_ACCESS_TOKEN)) {
+			// 重置AccessToken，便于trySendMessage时，可以重新问消息服务要新的Token
+			this.accessToken = null;
+			result = trySendMessage(messageContent, messageReceivers);
+		}
+		
+		return result;
+	}
+	
+    /**
+     * 尝试给多个人发消息
+     * @param messageContent   消息封包
+	 * @param messageReceivers 消息接收者
+     */
+	protected SendMessageResult trySendMessage(MessageContent messageContent, MultiMessageReceiver messageReceivers) {
 		Message message = new Message();
 		message.setType(messageContent.getType());
 		message.setContent(messageContent);

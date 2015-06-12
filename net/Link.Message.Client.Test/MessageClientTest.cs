@@ -19,13 +19,9 @@ namespace Link.Message.Client.Test
 
         public MessageClientTest()
         {
-            /*_messageClient = new EmbHttpClient("http://co3.gz-mstc.com:10082/svrnum/",
+            _messageClient = new EmbHttpClient("http://co3.gz-mstc.com:10082/svrnum/",
 				                          "33ac5630-3ab4-4975-a862-8002c24e3a45",
-				                          "3a6e700ed51d4cbf8ea70d98b2d97365");*/
-
-            _messageClient = new MessageClient("http://172.167.2.217:89/svrnum/",
-                    "3d236efb-389d-4221-8f61-b77d0af79d40",
-                    "3d236efb-389d-4221-8f61-b77d0af79d40");
+				                          "3a6e700ed51d4cbf8ea70d98b2d97365");
         }
 
         [TestMethod]

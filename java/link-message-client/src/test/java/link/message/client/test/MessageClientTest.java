@@ -38,9 +38,6 @@ public class MessageClientTest {
 		messageClient = new MessageClient("http://linktest.bingocc.cc:10082/svrnum/",
 				                          "43b80351-2c0a-4e84-a3d0-43eb7d35bc00",
 				                          "43b80351-2c0a-4e84-a3d0-43eb7d35bc00");
-		/*messageClient = new MessageClient("http://172.167.2.217:89/svrnum/",
-                "3d236efb-389d-4221-8f61-b77d0af79d40",
-                "3d236efb-389d-4221-8f61-b77d0af79d40");*/
     	/*messageClient = new MessageClient("http://10.201.76.93:10082/svrnum",
                 "3ecc8782-d1bd-45dc-88a5-b65d83dc5c30",
                 "1e5bc77ad12f496b8f9d038291de3680");*/

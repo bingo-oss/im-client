@@ -30,7 +30,7 @@ public class Action {
 	public static Action instanceAsOpenUrl(String url) {
 		Guard.guardReqiredString(url, "url must be set value.");
 		
-		if (!url.trim().toLowerCase().startsWith("http:") && url.trim().toLowerCase().startsWith("https:")) {
+		if (!url.trim().toLowerCase().startsWith("http:") && !url.trim().toLowerCase().startsWith("https:")) {
 			Guard.throwIllegalArgumentException("url must start with http or https.");
 		}
 		

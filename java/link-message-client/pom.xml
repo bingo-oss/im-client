@@ -3,17 +3,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>link.sdk</groupId>
 	<artifactId>link-message-client</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<distributionManagement>
 		<repository>
 			<id>bingo-maven-repository-releases</id>
 			<name>bingo-maven-repository-releases</name>
-			<url>http://maven.bingosoft.net/content/repositories/releases</url>
+			<url>https://maven.bingosoft.net/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>bingo-maven-repository-snapshots</id>
 			<name>bingo-maven-repository-snapshots</name>
-			<url>http://maven.bingosoft.net/content/repositories/snapshots</url>
+			<url>https://maven.bingosoft.net/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 	

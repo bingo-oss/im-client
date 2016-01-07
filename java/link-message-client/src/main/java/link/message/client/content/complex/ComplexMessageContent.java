@@ -50,7 +50,7 @@ public class ComplexMessageContent extends MessageContent {
 	
 	public static ComplexMessageContent instanceAsTextMessageContent(String brief, String content, Action action) {
 		ComplexMessageContent textMessageContent = new ComplexMessageContent(brief, ComplexMessageType.TEXT);
-		textMessageContent.addMessageContentItem(new ComplexMessageContentItem(new StringContent(content)));
+		textMessageContent.addMessageContentItem(new ComplexMessageContentItem(new StringContent(content), action));
 		return textMessageContent;
 	}
 	

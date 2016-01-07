@@ -30,7 +30,7 @@ namespace Link.Message.Client.content.complex
 		{
 			Guard.GuardReqiredString(url, "url must be set value.");
 
-			if (!url.Trim().ToLower().StartsWith("http:") && url.Trim().ToLower().StartsWith("https:"))
+			if (!url.Trim().ToLower().StartsWith("http:") && !url.Trim().ToLower().StartsWith("https:"))
 			{
 				Guard.ThrowIllegalArgumentException("url must start with http or https.");
 			}

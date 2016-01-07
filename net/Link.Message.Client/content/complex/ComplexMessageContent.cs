@@ -47,7 +47,7 @@ namespace Link.Message.Client.content.complex
 		public static ComplexMessageContent InstanceAsTextMessageContent(string brief, string content, Action action)
 		{
 			ComplexMessageContent textMessageContent = new ComplexMessageContent(brief, ComplexMessageType.Text);
-			textMessageContent.AddMessageContentItem(new ComplexMessageContentItem(new StringContent(content)));
+			textMessageContent.AddMessageContentItem(new ComplexMessageContentItem(new StringContent(content), action));
 			return textMessageContent;
 		}
 

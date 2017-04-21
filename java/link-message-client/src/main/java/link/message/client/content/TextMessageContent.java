@@ -16,7 +16,7 @@ public class TextMessageContent extends MessageContent implements StringOrObject
 		Guard.guardReqiredString(text, "TextMessageContent's content is required.");
 		
 		this.text = text;
-		this.type = MessageType.TEXT;
+		this.type = MessageType.TEXT.value();
 	}
 
 	@Override

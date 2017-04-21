@@ -24,7 +24,7 @@ public class ComplexMessageContent extends MessageContent {
 	private List<ComplexMessageContentItem> contents = new ArrayList<ComplexMessageContentItem>();
 
 	public ComplexMessageContent() {
-		this.type = MessageType.COMPLEX;
+		this.type = MessageType.COMPLEX.value();
 	}
 	
 	public ComplexMessageContent(String brief) {

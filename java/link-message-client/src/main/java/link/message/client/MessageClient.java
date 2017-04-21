@@ -173,12 +173,21 @@ public class MessageClient {
 	 * @param message  消息封包
 	 */
 	public SendMessageResult sendSingleMessage(MessageContent messageContent, PersonMessageReceiver messageReceiver) {
+		return sendSingleMessage(messageContent, messageReceiver, PersonMessageReceiverIdType.LOGIN_ID);
+	}
+	
+	/**
+	 * 发送单条消息
+	 * 
+	 * @param message  消息封包
+	 */
+	public SendMessageResult sendSingleMessage(MessageContent messageContent, PersonMessageReceiver messageReceiver, int personMessageReceiverIdType) {
 		Guard.guardReqiredObject(messageContent, "message content must be set value.");
 		guardMessageReceiver(messageReceiver);
 
 		List<PersonMessageReceiver> messageReceivers = new ArrayList<PersonMessageReceiver>();
 		messageReceivers.add(messageReceiver);
-		MultiMessageReceiver multiMessageReceiver = new MultiMessageReceiver(messageReceivers, PersonMessageReceiverIdType.LOGIN_ID);
+		MultiMessageReceiver multiMessageReceiver = new MultiMessageReceiver(messageReceivers, personMessageReceiverIdType);
 		
 		return sendMultiMessage(messageContent, multiMessageReceiver);
 	}

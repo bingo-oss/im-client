@@ -44,6 +44,7 @@ public class NativeCommandAndParamsBuilder {
 		Guard.guardReqiredString(localPagePath,      "pageUrl must be set value.");
 		
 		NativeCommandAndParamsBuilder nativeCommandAndParamsBuilder = new NativeCommandAndParamsBuilder(bingoTouchAppCode);
+		nativeCommandAndParamsBuilder.append("appCode", bingoTouchAppCode);
 		nativeCommandAndParamsBuilder.append("appUrl", localPagePath);
 		
 		if (null != params) {

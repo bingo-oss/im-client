@@ -179,7 +179,10 @@ public class MessageClient {
 	/**
 	 * 发送单条消息
 	 * 
-	 * @param message  消息封包
+	 * @param messageContent 消息封包
+	 * @param messageReceiver 接收者
+	 * @param personMessageReceiverIdType 接收者id类型，参考PersonMessageReceiverIdType
+	 * @return
 	 */
 	public SendMessageResult sendSingleMessage(MessageContent messageContent, PersonMessageReceiver messageReceiver, int personMessageReceiverIdType) {
 		Guard.guardReqiredObject(messageContent, "message content must be set value.");

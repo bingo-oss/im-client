@@ -6,6 +6,7 @@ package link.message.client.messager;
  *
  */
 public class PersonMessageReceiverIdType {
+	
 	public static final int USER_ID  = 1;
 	public static final int LOGIN_ID = 2;
 }

@@ -51,6 +51,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MessageClientTest.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Link.Message.Client\Link.Message.Client.csproj">
+      <Project>{8c9a545e-f2a4-46a4-8767-0b1499ff7738}</Project>
+      <Name>Link.Message.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

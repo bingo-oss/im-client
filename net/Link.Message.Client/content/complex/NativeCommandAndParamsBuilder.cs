@@ -47,7 +47,8 @@ namespace Link.Message.Client.content.complex
 			Guard.GuardReqiredString(localPageUrl, "pageUrl must be set value.");
 
 			NativeCommandAndParamsBuilder nativeCommandAndParamsBuilder = new NativeCommandAndParamsBuilder(bingoTouchAppCode);
-			nativeCommandAndParamsBuilder.Append("appUrl", localPageUrl);
+            nativeCommandAndParamsBuilder.Append("appCode", bingoTouchAppCode);
+            nativeCommandAndParamsBuilder.Append("appUrl", localPageUrl);
 
 			foreach (Param param in @params)
 			{

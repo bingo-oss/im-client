@@ -238,9 +238,7 @@ public class MessageClient {
 		
 		if (messageReceivers.getIdType() == PersonMessageReceiverIdType.LOGIN_ID) {
 			params.add(new BasicNameValuePair("loginIds", messageReceivers.getToId()));
-		}
-		
-		if (messageReceivers.getIdType() == PersonMessageReceiverIdType.USER_ID) {
+		} else if (messageReceivers.getIdType() == PersonMessageReceiverIdType.USER_ID) {
 			params.add(new BasicNameValuePair("userIds", messageReceivers.getToId()));
 		}
 		

@@ -14,3 +14,6 @@ E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMe
 E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\obj\Debug\Link.Message.Client.Test.csprojResolveAssemblyReference.cache
 E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\obj\Debug\Emb.Http.Client.Test.dll
 E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\LinkMessageClient\Link.Message.Client.Test\obj\Debug\Emb.Http.Client.Test.pdb
+G:\workspace\link-message-client\net\Link.Message.Client.Test\obj\Debug\Link.Message.Client.Test.csprojResolveAssemblyReference.cache
+G:\workspace\link-message-client\net\Link.Message.Client.Test\obj\Debug\Emb.Http.Client.Test.dll
+G:\workspace\link-message-client\net\Link.Message.Client.Test\obj\Debug\Emb.Http.Client.Test.pdb

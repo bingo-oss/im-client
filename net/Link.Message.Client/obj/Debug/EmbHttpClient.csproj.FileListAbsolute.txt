@@ -1,1 +1,0 @@
-E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\EmbHttpClient\obj\Debug\EmbHttpClient.csprojResolveAssemblyReference.cache

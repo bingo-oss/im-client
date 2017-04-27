@@ -1,6 +1,0 @@
-E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\EmbHttpClient\bin\Debug\Emb.Http.Client.dll
-E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\EmbHttpClient\bin\Debug\Emb.Http.Client.pdb
-E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\EmbHttpClient\bin\Debug\Newtonsoft.Json.dll
-E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\EmbHttpClient\obj\Debug\Emb.Http.Client.dll
-E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\EmbHttpClient\obj\Debug\Emb.Http.Client.pdb
-E:\doc\03.Project\001.BingoLink\source\trunk\6.client\emb-http-client\net\EmbHttpClient\EmbHttpClient\obj\Debug\Emb.Http.Client.csprojResolveAssemblyReference.cache

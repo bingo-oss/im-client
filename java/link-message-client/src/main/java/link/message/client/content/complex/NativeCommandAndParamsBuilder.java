@@ -34,18 +34,40 @@ public class NativeCommandAndParamsBuilder {
 	
 	/**
 	 * 构建一个打开bingotouch本地页面的所需action参数
+	 * @see #buildAsOpenBingoTouchLocalAppPage(String, String, String, Param...)
+	 */
+	public static String buildAsOpenBingoTouchLocalAppPage(String bingoTouchAppCode, String localPagePath, Param...params) {
+		Param[] paramsNew = null;
+		
+		int startIndex = 0;
+		if (null != params) {
+			paramsNew = new Param[params.length+2];
+			for(int i=0; i<params.length; ++i) {
+				paramsNew[i] = params[i];
+			}
+			startIndex = params.length;
+		} else {
+			paramsNew = new Param[2];
+		}
+		paramsNew[startIndex]   = new Param("appCode", bingoTouchAppCode);
+		paramsNew[startIndex+1] = new Param("appUrl", localPagePath);
+				
+		return buildAsOpenBingoTouchLocalAppPage(bingoTouchAppCode, localPagePath, "OpenApp", paramsNew);
+	}
+	
+	/**
+	 * 构建一个打开bingotouch本地页面的所需action参数
 	 * @param bingoTouchAppCode 应用编码
 	 * @param localPagePath     打开的页面路径，相对路径
+	 * @param command           指令
 	 * @param params            配套的键值对，在bingotouch页面里可以拿到
 	 * @return 组装好的actionParam
 	 */
-	public static String buildAsOpenBingoTouchLocalAppPage(String bingoTouchAppCode, String localPagePath, Param...params) {
+	public static String buildAsOpenBingoTouchLocalAppPage(String bingoTouchAppCode, String localPagePath, String command, Param...params) {
 		Guard.guardReqiredString(bingoTouchAppCode, "bingoTouchAppCode must be set value.");
 		Guard.guardReqiredString(localPagePath,      "pageUrl must be set value.");
 		
-		NativeCommandAndParamsBuilder nativeCommandAndParamsBuilder = new NativeCommandAndParamsBuilder(bingoTouchAppCode);
-		nativeCommandAndParamsBuilder.append("appCode", bingoTouchAppCode);
-		nativeCommandAndParamsBuilder.append("appUrl", localPagePath);
+		NativeCommandAndParamsBuilder nativeCommandAndParamsBuilder = new NativeCommandAndParamsBuilder(command);
 		
 		if (null != params) {
 			for (Param param: params) {

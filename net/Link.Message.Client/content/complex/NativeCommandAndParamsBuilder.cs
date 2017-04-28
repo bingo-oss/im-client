@@ -43,26 +43,51 @@ namespace Link.Message.Client.content.complex
         /// <returns> 组装好的actionParam </returns>
 		public static string BuildAsOpenBingoTouchLocalAppPage(string bingoTouchAppCode, string localPageUrl, params Param[] @params)
 		{
-			Guard.GuardReqiredString(bingoTouchAppCode, "bingoTouchAppCode must be set value.");
-			Guard.GuardReqiredString(localPageUrl, "pageUrl must be set value.");
+		    Param[] paramsNew = null;
 
-			NativeCommandAndParamsBuilder nativeCommandAndParamsBuilder = new NativeCommandAndParamsBuilder(bingoTouchAppCode);
-            nativeCommandAndParamsBuilder.Append("appCode", bingoTouchAppCode);
-            nativeCommandAndParamsBuilder.Append("appUrl", localPageUrl);
-
-			foreach (Param param in @params)
-			{
-				nativeCommandAndParamsBuilder.Append(param.Key, param.Value);
-			}
-
-			return nativeCommandAndParamsBuilder.ToString();
+		    int startIndex = 0;
+		    if (null != @params) {
+		        paramsNew = new Param[@params.Length + 2];
+		        for (int i = 0; i < @params.Length; ++i) {
+		            paramsNew[i] = @params[i];
+		        }
+		        startIndex = @params.Length;
+		    } else {
+		        paramsNew = new Param[2];
+		    }
+		    paramsNew[startIndex]   = new Param("appCode", bingoTouchAppCode);
+		    paramsNew[startIndex + 1] = new Param("appUrl", localPageUrl);
+				
+		    return BuildAsOpenBingoTouchLocalAppPage(bingoTouchAppCode, localPageUrl, "OpenApp", paramsNew);
 		}
 
-		/// <summary>
+        /// <summary>
+        /// 构建一个打开bingotouch本地页面的所需action参数 </summary>
+        /// <param name="bingoTouchAppCode"> 应用编码 </param>
+        /// <param name="localPageUrl">      打开的页面URL，相对路径 </param>
+        /// <param name="command">           指令 </param>
+        /// <param name="params">            配套的键值对 </param>
+        /// <returns> 组装好的actionParam </returns>
+        public static string BuildAsOpenBingoTouchLocalAppPage(string bingoTouchAppCode, string localPageUrl, string command, params Param[] @params)
+	    {
+	        Guard.GuardReqiredString(bingoTouchAppCode, "bingoTouchAppCode must be set value.");
+	        Guard.GuardReqiredString(localPageUrl, "pageUrl must be set value.");
+
+	        NativeCommandAndParamsBuilder nativeCommandAndParamsBuilder = new NativeCommandAndParamsBuilder(command);
+
+	        foreach (Param param in @params)
+	        {
+	            nativeCommandAndParamsBuilder.Append(param.Key, param.Value);
+	        }
+
+	        return nativeCommandAndParamsBuilder.ToString();
+	    }
+
+        /// <summary>
         /// 构建一个打开bingotouch远程页面的action参数</summary>
         /// <param name="remotePageUrl"> 远程应用页面，绝对路径 </param>
         /// <returns> 组装好的actionParam </returns>
-		public static string BuildAsOpenBingoTouchRemoteAppPage(string remotePageUrl)
+        public static string BuildAsOpenBingoTouchRemoteAppPage(string remotePageUrl)
 		{
 			Guard.GuardReqiredString(remotePageUrl, "bingoTouchAppCode must be set value.");
 

@@ -1,0 +1,10 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\net",
+    "\\net\\Link.Message.Client",
+    "\\net\\Link.Message.Client\\messager"
+  ],
+  "SelectedNode": "\\net\\Link.Message.Client\\MessageClient.cs",
+  "PreviewInSolutionExplorer": false
+}

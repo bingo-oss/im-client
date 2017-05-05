@@ -22,7 +22,7 @@ public class NativeCommandAndParamsBuilder {
 	
 	public NativeCommandAndParamsBuilder append(String key, String value) {
 		
-		this.actionParams.append("\r\n").append(key).append("=").append(value);
+		this.actionParams.append("\n").append(key).append("=").append(value);
 		
 		return this;
 	}

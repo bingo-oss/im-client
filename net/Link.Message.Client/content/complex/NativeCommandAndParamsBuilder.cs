@@ -25,7 +25,7 @@ namespace Link.Message.Client.content.complex
 		public virtual NativeCommandAndParamsBuilder Append(string key, string value)
 		{
 
-			ActionParams.Append("\r\n").Append(key).Append("=").Append(value);
+			ActionParams.Append("\n").Append(key).Append("=").Append(value);
 
 			return this;
 		}

@@ -68,7 +68,7 @@ public class IMClient {
                 throw new SendMessageFailException("fail when send message:"+receipt.getErr());
             }
         } catch (HttpRequestException e) {
-            throw new SendMessageFailException("fail when send message",e);
+            throw new SendMessageFailException("fail when send message to ["+config.getSendUrl()+"]",e);
         }
     }
     

@@ -2,6 +2,8 @@ package net.bingosoft.oss.imclient.utils;
 
 import net.bingosoft.oss.imclient.model.ObjectType;
 import net.bingosoft.oss.imclient.model.SendMessage;
+import net.bingosoft.oss.imclient.model.msg.Content;
+import net.bingosoft.oss.imclient.model.msg.Text;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +20,7 @@ public class MessageBuilder {
     protected String msgId;
     protected int msgType;
     
-    protected String content;
+    protected Content content;
     
     protected int fromType;
     protected String fromId;
@@ -67,8 +69,13 @@ public class MessageBuilder {
         return this;
     }
     
-    public MessageBuilder setContent(String content){
+    public MessageBuilder setContent(Content content){
         this.content = content;
+        return this;
+    }
+    
+    public MessageBuilder setTextContent(String text){
+        setContent(new Text(text));
         return this;
     }
     

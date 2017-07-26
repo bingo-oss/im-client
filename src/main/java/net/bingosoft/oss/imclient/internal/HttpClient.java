@@ -140,6 +140,9 @@ public class HttpClient {
                 content.append(line);
                 content.append("\n");
             }while (true);
+            if(content.length() > 0 && content.charAt(content.length()-1)=='\n'){
+                content.deleteCharAt(content.length()-1);
+            }
         } catch (IOException e) {
             throw new HttpRequestException(e);
         } finally {

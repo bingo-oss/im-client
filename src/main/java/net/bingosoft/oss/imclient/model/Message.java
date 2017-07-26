@@ -1,5 +1,7 @@
 package net.bingosoft.oss.imclient.model;
 
+import net.bingosoft.oss.imclient.model.msg.Content;
+
 /**
  * 
  * 发送的消息
@@ -24,9 +26,10 @@ public abstract class Message {
     protected int msgType;
     /**
      * content
+     * 不允许为null，为空时需要设置为{@link Content#EMPTY}
      * 消息内容：发送前/接收后需要加密/解密
      */
-    protected String content;
+    protected Content content;
     /**
      * from_type
      * 发送者类别
@@ -137,11 +140,11 @@ public abstract class Message {
         this.msgType = msgType;
     }
 
-    public String getContent() {
+    public Content getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(Content content) {
         this.content = content;
     }
 

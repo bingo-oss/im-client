@@ -6,22 +6,22 @@ package net.bingosoft.oss.imclient;
  */
 public class IMConfig {
     
-    protected String embUrl;
+    protected String imUrl;
     protected String sendUrl;
     
-    public IMConfig(String embUrl) {
-        this.embUrl = embUrl;
-        this.autoConfigure(embUrl);
+    public IMConfig(String imUrl) {
+        this.imUrl = imUrl;
+        this.autoConfigure(imUrl);
     }
 
-    public String getEmbUrl() {
-        return embUrl;
+    public String getImUrl() {
+        return imUrl;
     }
 
-    public void setEmbUrl(String embUrl) {
-        this.embUrl = embUrl;
+    public void setImUrl(String imUrl) {
+        this.imUrl = imUrl;
     }
-    
+
     public void autoConfigure(String embUrl){
         if(null == embUrl || embUrl.trim().isEmpty()){
             return;

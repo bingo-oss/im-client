@@ -1,6 +1,5 @@
 package net.bingosoft.oss.imclient;
 
-import net.bingosoft.oss.imclient.internal.Base64;
 import net.bingosoft.oss.imclient.model.SendMessage;
 
 import java.io.UnsupportedEncodingException;
@@ -21,7 +20,7 @@ public class IMUtil {
         map.put("msg_id",message.getMsgId());
         map.put("msg_type",message.getMsgType());
         
-        map.put("content",encryptContent(message.getContent()));
+        map.put("content",message.getContent().encryptContent());
         
         map.put("from_type",message.getFromType());
         map.put("from_id",message.getFromId());
@@ -50,7 +49,7 @@ public class IMUtil {
              for(int i=0; i < bytes.length; i++){
                  bytes[i] = (byte) ~bytes[i];
              }
-             return Base64.encode(bytes);
+             return new String(bytes,"UTF-8");
          } catch (UnsupportedEncodingException e) {
              throw new RuntimeException(e);
          }

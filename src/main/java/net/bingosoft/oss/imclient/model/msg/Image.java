@@ -5,5 +5,4 @@ package net.bingosoft.oss.imclient.model.msg;
  * @author kael.
  */
 public class Image extends FileContent {
-    
 }

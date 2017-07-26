@@ -161,7 +161,9 @@ public class HttpClient {
             }
         }
         if(code>=400){
-            throw new HttpRequestException("error status: " + code + "\n" + content.toString());
+            HttpRequestException exception = new HttpRequestException("error status: " + code + "\n" + content.toString());
+            exception.setStatus(code);
+            throw exception;
         }
         return content.toString();
     }

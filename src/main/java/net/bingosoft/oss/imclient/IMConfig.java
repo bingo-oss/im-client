@@ -7,7 +7,9 @@ package net.bingosoft.oss.imclient;
 public class IMConfig {
     
     protected String imUrl;
-    protected String sendUrl;
+    protected String userUrl;
+    protected String pollUrl;
+    protected String snoUrl;
     
     public IMConfig(String imUrl) {
         this.imUrl = imUrl;
@@ -28,15 +30,32 @@ public class IMConfig {
         }
         String url = embUrl.endsWith("/")?embUrl.substring(0,embUrl.length()-1):embUrl;
         
-        this.sendUrl = url + "/private/send";
+        this.userUrl = url + "/private/send";
+        this.pollUrl = url + "/private/poll";
+        this.snoUrl = url + "/svrnum/send";
     }
 
-    public String getSendUrl() {
-        return sendUrl;
+    public String getUserUrl() {
+        return userUrl;
     }
 
-    public void setSendUrl(String sendUrl) {
-        this.sendUrl = sendUrl;
+    public void setUserUrl(String userUrl) {
+        this.userUrl = userUrl;
     }
 
+    public String getSnoUrl() {
+        return snoUrl;
+    }
+
+    public void setSnoUrl(String snoUrl) {
+        this.snoUrl = snoUrl;
+    }
+
+    public String getPollUrl() {
+        return pollUrl;
+    }
+
+    public void setPollUrl(String pollUrl) {
+        this.pollUrl = pollUrl;
+    }
 }

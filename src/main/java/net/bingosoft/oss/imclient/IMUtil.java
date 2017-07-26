@@ -1,6 +1,15 @@
 package net.bingosoft.oss.imclient;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import net.bingosoft.oss.imclient.internal.Base64;
+import net.bingosoft.oss.imclient.model.MsgType;
+import net.bingosoft.oss.imclient.model.ObjectType;
+import net.bingosoft.oss.imclient.model.ReceiveMessage;
 import net.bingosoft.oss.imclient.model.SendMessage;
+import net.bingosoft.oss.imclient.model.msg.Content;
+import net.bingosoft.oss.imclient.model.msg.Image;
+import net.bingosoft.oss.imclient.model.msg.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -43,19 +52,110 @@ public class IMUtil {
         return map;
     } 
     
-     public static String encryptContent(String content){
+    public static ReceiveMessage toMessage(Map<String, Object> map){
+        ReceiveMessage rm = new ReceiveMessage();
+        rm.setTaskId((String) map.get("task_id"));
+        rm.setMsgId((String)map.get("msg_id"));
+        rm.setMsgType(objectToInt(map.get("msg_type"), MsgType.TEXT));
+        
+        rm.setContent(decryptContent((String) map.get("content"),rm.getMsgType()));
+        
+        rm.setFromType(objectToInt(map.get("from_type"), ObjectType.USER));
+        rm.setFromId((String)map.get("from_id"));
+        rm.setFromCompany((String)map.get("from_company"));
+        rm.setFromName((String)map.get("from_name"));
+        
+        rm.setToId((String)map.get("to_id"));
+        rm.setToType(objectToInt(map.get("to_type"),ObjectType.USER));
+        rm.setToName((String)map.get("to_name"));
+        rm.setToCompany((String)map.get("to_company"));
+        
+        rm.setRecReceipt(objectToBoolean(map.get("rec_receipt"),false));
+        rm.setIsCountUnread(objectToBoolean(map.get("is_count_unread"),true));
+        rm.setIsDeleteAfterRead(objectToBoolean(map.get("is_delete_after_read"),false));
+        rm.setIsNeedReadReceipt(objectToBoolean(map.get("is_need_read_receipt"),false));
+        
+        rm.setToDeviceTypes((String)map.get("to_device_types"));
+        rm.setAtUserIds((String)map.get("at_user_ids"));
+        
+        rm.setSendTime(objectToLong(map.get("send_time"),System.currentTimeMillis()));
+        rm.setIsRead(objectToInt(map.get("is_read"),0));
+        return rm;
+    }
+    
+    public static int objectToInt(Object o,int def){
+        if(null == o){
+            return def;
+        }else if(o instanceof Integer){
+            return (Integer)o;
+        }else {
+            return Integer.getInteger(o.toString());
+        }
+    }
+
+    public static long objectToLong(Object o,long def){
+        if(null == o){
+            return def;
+        }else if(o instanceof Integer){
+            return (Long) o;
+        }else {
+            return Long.parseLong(o.toString());
+        }
+    }
+    
+    public static boolean objectToBoolean(Object o,boolean def){
+        if(null == o){
+            return def;
+        }else if(o instanceof Boolean){
+            return (Boolean) o;
+        }else {
+            return Boolean.getBoolean(o.toString());
+        }
+    }
+    
+    public static String encryptContent(String content){
          try {
              byte[] bytes = content.getBytes("UTF-8");
              for(int i=0; i < bytes.length; i++){
                  bytes[i] = (byte) ~bytes[i];
              }
-             return new String(bytes,"UTF-8");
+             return Base64.encode(bytes);
          } catch (UnsupportedEncodingException e) {
              throw new RuntimeException(e);
          }
     }
     
-    public static String decryptContent(String content){
-        throw new UnsupportedOperationException();
+    public static Content decryptContent(String content, int msgType){
+
+        try {
+            if(null == content || content.isEmpty()){
+                return Content.EMPTY;
+            }
+            byte[] bytes = Base64.decode(content);
+            for(int i=0; i < bytes.length; i++){
+                bytes[i] = (byte) ~bytes[i];
+            }
+            return parseContent(new String(bytes,"UTF-8"),msgType);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+         
+    }
+    
+    public static Content parseContent(String content, int msgType){
+        if(msgType == MsgType.TEXT){
+            return new Text(content);
+        }
+        JSONObject json = JSON.parseObject(content);
+        if(msgType == MsgType.IMAGE){
+            Image image = new Image();
+            image.setDownloadUrl(json.getString("download_url"));
+            image.setExtension(json.getString("extension"));
+            image.setFileName(json.getString("file_name"));
+            image.setSize(json.getLong("size"));
+            return image;
+        }
+        
+        throw new UnsupportedOperationException("can not parse message type:"+msgType);
     }
 }

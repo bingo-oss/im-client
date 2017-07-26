@@ -3,6 +3,7 @@ package net.bingosoft.oss.imclient.utils;
 import net.bingosoft.oss.imclient.model.ObjectType;
 import net.bingosoft.oss.imclient.model.SendMessage;
 import net.bingosoft.oss.imclient.model.msg.Content;
+import net.bingosoft.oss.imclient.model.msg.FileContent;
 import net.bingosoft.oss.imclient.model.msg.Text;
 
 import java.util.HashSet;
@@ -53,6 +54,20 @@ public class MessageBuilder {
     public static MessageBuilder snoMessage(){
         return new MessageBuilder().setFromType(ObjectType.SNO);
     }
+
+    /**
+     * 文本消息
+     */
+    public static MessageBuilder textMessage(String text){
+        return new MessageBuilder().setTextContent(text);
+    }
+
+    /**
+     * 文件类的消息
+     */
+    public static <T extends FileContent> MessageBuilder fileMessage(T content){
+        return new MessageBuilder().setContent(content);
+    }
     
     public MessageBuilder setTaskId(String taskId){
         this.taskId = taskId;
@@ -75,8 +90,11 @@ public class MessageBuilder {
     }
     
     public MessageBuilder setTextContent(String text){
-        setContent(new Text(text));
-        return this;
+        return setContent(new Text(text));
+    }
+    
+    public <T extends FileContent> MessageBuilder setFileContent(T content){
+        return setFileContent(content);
     }
     
     public MessageBuilder setFromType(int fromType){

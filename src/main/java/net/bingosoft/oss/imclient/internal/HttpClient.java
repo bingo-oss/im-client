@@ -150,6 +150,9 @@ public class HttpClient {
             } catch (IOException e) {
                 is = conn.getErrorStream();
             }
+            if(null == is){
+                throw new HttpRequestException("error request:"+code).setStatus(code);
+            }
             isr = new InputStreamReader(is,"UTF-8");
             br = new BufferedReader(isr);
             do{
@@ -167,9 +170,11 @@ public class HttpClient {
                 throw new HttpRequestException("error status: " + code + "\n" + content.toString()).setStatus(code);
             }
             return content.toString();
-        }catch (Exception e){
+        }catch (HttpRequestException e){
+            throw e;
+        } catch (Exception e){
             throw new HttpRequestException(e);
-        }finally {
+        } finally {
             try {
                 if(null != bw){
                     bw.close();

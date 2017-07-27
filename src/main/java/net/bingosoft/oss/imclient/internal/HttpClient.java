@@ -30,30 +30,6 @@ import java.util.Map;
  * @author kael.
  */
 public class HttpClient {
-
-
-    protected static final SSLSocketFactory ignoreCerSSLSocketFactory;
-    protected static final SSLSocketFactory defaultSSLSocketFactory;
-    static {
-        defaultSSLSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory();
-        // Create a trust manager that does not validate certificate chains  
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return new java.security.cert.X509Certificate[] {};
-            }
-            public void checkClientTrusted(X509Certificate[] chain, String authType)  {}
-            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
-            }
-        };
-        // Install the all-trusting trust manager  
-        try {
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            ignoreCerSSLSocketFactory = sc.getSocketFactory();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
     
     public static String postJsonBody(String url, String body, Map<String, String> headers) throws HttpRequestException{
         HttpURLConnection conn = openConnection(url);
@@ -82,6 +58,29 @@ public class HttpClient {
         HttpURLConnection conn = openConnection(url);
         preProcessConnection(conn,headers,"GET");
         return sendAndGetContent(conn,null);
+    }
+    /**=========================== 内部方法 ==================================**/
+    protected static final SSLSocketFactory ignoreCerSSLSocketFactory;
+    protected static final SSLSocketFactory defaultSSLSocketFactory;
+    static {
+        defaultSSLSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory();
+        // Create a trust manager that does not validate certificate chains  
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return new java.security.cert.X509Certificate[] {};
+            }
+            public void checkClientTrusted(X509Certificate[] chain, String authType)  {}
+            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+        }
+        };
+        // Install the all-trusting trust manager  
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            ignoreCerSSLSocketFactory = sc.getSocketFactory();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     
     protected static String urlencoded(Map<String, String> params){
@@ -199,7 +198,7 @@ public class HttpClient {
     
     private HttpClient() {}
     
-    public static HttpURLConnection openConnection(String url){
+    protected static HttpURLConnection openConnection(String url){
         URI uri = URI.create(url);
         try {
             URL u = uri.toURL();
@@ -212,7 +211,7 @@ public class HttpClient {
         }
     }
     
-    public static HttpURLConnection openIgnoreCerConnection(URL url) throws IOException {
+    protected static HttpURLConnection openIgnoreCerConnection(URL url) throws IOException {
         if("https".equalsIgnoreCase(url.getProtocol())){
             HttpsURLConnection.setDefaultSSLSocketFactory(ignoreCerSSLSocketFactory);
             URLConnection connection;

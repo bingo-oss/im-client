@@ -17,8 +17,17 @@
 package net.bingosoft.oss.imclient.model;
 
 public class AccessToken {
+    /**
+     * 访问令牌
+     */
     private String accessToken;
+    /**
+     * 刷新令牌
+     */
     private String refreshToken;
+    /**
+     * token令牌，一般是Bearer
+     */
     private String tokenType;
     /**
      * 过期时间，单位是秒

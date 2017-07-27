@@ -50,15 +50,18 @@ public class IMUtil {
         map.put("at_user_ids",message.getAtUserIds());
         
         return map;
-    } 
-    
+    }
+
+    /**
+     * 将map转换为{@link ReceiveMessage}，不对{@link Content}进行解密，收到的密文直接当成text
+     */
     public static ReceiveMessage toMessage(Map<String, Object> map){
         ReceiveMessage rm = new ReceiveMessage();
         rm.setTaskId((String) map.get("task_id"));
         rm.setMsgId((String)map.get("msg_id"));
         rm.setMsgType(objectToInt(map.get("msg_type"), MsgType.TEXT));
         
-        rm.setContent(decryptContent((String) map.get("content"),rm.getMsgType()));
+        rm.setContent(new Text((String) map.get("content")));
         
         rm.setFromType(objectToInt(map.get("from_type"), ObjectType.USER));
         rm.setFromId((String)map.get("from_id"));
@@ -125,37 +128,20 @@ public class IMUtil {
          }
     }
     
-    public static Content decryptContent(String content, int msgType){
+    public static String decryptContent(String content){
 
         try {
             if(null == content || content.isEmpty()){
-                return Content.EMPTY;
+                return "";
             }
             byte[] bytes = Base64.decode(content);
             for(int i=0; i < bytes.length; i++){
                 bytes[i] = (byte) ~bytes[i];
             }
-            return parseContent(new String(bytes,"UTF-8"),msgType);
+            return new String(bytes,"UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
          
-    }
-    
-    public static Content parseContent(String content, int msgType){
-        if(msgType == MsgType.TEXT){
-            return new Text(content);
-        }
-        JSONObject json = JSON.parseObject(content);
-        if(msgType == MsgType.IMAGE){
-            Image image = new Image();
-            image.setDownloadUrl(json.getString("download_url"));
-            image.setExtension(json.getString("extension"));
-            image.setFileName(json.getString("file_name"));
-            image.setSize(json.getLong("size"));
-            return image;
-        }
-        
-        throw new UnsupportedOperationException("can not parse message type:"+msgType);
     }
 }

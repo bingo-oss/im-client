@@ -1,4 +1,4 @@
-package net.bingosoft.oss.imclient.spi;
+package net.bingosoft.oss.imclient.spi.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -7,6 +7,7 @@ import net.bingosoft.oss.imclient.exception.InvalidCodeException;
 import net.bingosoft.oss.imclient.internal.Base64;
 import net.bingosoft.oss.imclient.internal.HttpClient;
 import net.bingosoft.oss.imclient.model.AccessToken;
+import net.bingosoft.oss.imclient.spi.AccessTokenProvider;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.Map;
 /**
  * @author kael.
  */
-public class AccessTokenProviderImpl implements AccessTokenProvider{
+public class AccessTokenProviderImpl implements AccessTokenProvider {
     
     protected final String tokenUrl;
     protected final String clientId;

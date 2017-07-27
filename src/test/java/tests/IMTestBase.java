@@ -88,10 +88,7 @@ public abstract class IMTestBase {
     }
     @Before
     public void allBefore(){
-        Body<ReceiveMessage> body = JsonBody.json(textMessage);
-        HttpRequest request = request().withMethod("POST")
-                //.withBody(body)
-                .withPath("/private/send");
+        HttpRequest request = request().withMethod("POST").withPath("/private/send");
         imServer.when(request).callback(HttpClassCallback.callback(UserSendCallback.class.getName()));
         
         before();

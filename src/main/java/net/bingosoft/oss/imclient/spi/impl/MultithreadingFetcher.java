@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import net.bingosoft.oss.imclient.IMClient;
 import net.bingosoft.oss.imclient.IMUtil;
-import net.bingosoft.oss.imclient.exception.HttpRequestException;
 import net.bingosoft.oss.imclient.internal.HttpClient;
 import net.bingosoft.oss.imclient.model.ReceiveMessage;
 import net.bingosoft.oss.imclient.spi.ContentDecoder;
@@ -60,7 +59,7 @@ public class MultithreadingFetcher implements MessageFetcher {
                     if(!callback.apply(rms)){
                         break;
                     }
-                } catch (HttpRequestException e){
+                } catch (HttpClient.HttpRequestException e){
                     if(e.getStatus() == 417){
                         if(!callback.onTimeout()){
                             break;

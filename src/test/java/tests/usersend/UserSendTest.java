@@ -26,4 +26,5 @@ public class UserSendTest extends IMTestBase{
         Assert.assertTrue(error);
     }
     
+    
 }

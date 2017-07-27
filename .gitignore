@@ -1,4 +1,3 @@
-/target/
 ### maven template
 *.class
 .DS_Store
@@ -27,3 +26,8 @@ target
 
 # Other Files #
 derby.log
+
+
+# mockserver
+MockServerCertificate.pem
+MockServerPrivateKey.pem

@@ -6,15 +6,11 @@ import net.bingosoft.oss.imclient.IMConfig;
 import net.bingosoft.oss.imclient.model.AccessToken;
 import net.bingosoft.oss.imclient.model.MsgType;
 import net.bingosoft.oss.imclient.model.ObjectType;
-import net.bingosoft.oss.imclient.model.ReceiveMessage;
 import net.bingosoft.oss.imclient.model.SendMessage;
 import net.bingosoft.oss.imclient.spi.AccessTokenProvider;
 import net.bingosoft.oss.imclient.utils.MessageBuilder;
-import org.junit.After;
-import org.junit.Before;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.mock.action.ExpectationCallback;
-import org.mockserver.model.Body;
 import org.mockserver.model.Header;
 import org.mockserver.model.HttpClassCallback;
 import org.mockserver.model.HttpRequest;
@@ -50,10 +46,15 @@ public abstract class IMTestBase {
     protected static final long   exp = System.currentTimeMillis()+1000*60*60;
     
     protected static final int imPort = 7080;
-    protected static final String imUrl = "http://localhost:"+imPort;
+    protected static final String imUrl = "https://localhost:"+imPort;
     protected static final ClientAndServer imServer = startClientAndServer(imPort);
     // protected static final ClientAndServer uaServer = startClientAndServer(7090);
     // protected static final ClientAndProxy proxy = startClientAndProxy(1090);
+    static {
+        HttpRequest request = request().withMethod("POST").withPath("/private/send");
+        imServer.when(request).callback(HttpClassCallback.callback(UserSendCallback.class.getName()));
+    }
+    
     protected final Header header1;
     protected final SendMessage errorMessage;
     protected final SendMessage textMessage;
@@ -63,7 +64,6 @@ public abstract class IMTestBase {
     protected final IMConfig config;
     protected final AccessTokenProvider tp;
     protected final IMClient client;
-    
     public IMTestBase() {
         header1 = new Header(authorization, bearer+" "+at1);
         invalidToken = createAccessToken("at3",rt1,exp,bearer);
@@ -86,19 +86,7 @@ public abstract class IMTestBase {
         };
         client = new IMClient(config,tp);
     }
-    @Before
-    public void allBefore(){
-        HttpRequest request = request().withMethod("POST").withPath("/private/send");
-        imServer.when(request).callback(HttpClassCallback.callback(UserSendCallback.class.getName()));
-        
-        before();
-    }
-    @After
-    public void allAfter(){
-        after();
-    }
-    protected void before(){}
-    protected void after(){}
+    
     protected SendMessage createSendMessage(String senderId, String senderName, String receiverId, String receiverName){
         return MessageBuilder.userMessage()
                 .setFromId(senderId)

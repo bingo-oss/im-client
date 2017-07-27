@@ -1,16 +1,27 @@
 package net.bingosoft.oss.imclient.internal;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockserver.integration.ClientAndServer;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+
 /**
  * @author kael.
  */
 public class TestHttpClient {
+    
+    protected static final int port = 7000;
+    protected static final String mockUrl = "https://localhost:"+port;
+    protected static ClientAndServer mockServer;
+
+    
     @Test
     public void testPost() throws UnsupportedEncodingException {
         Map<String, String> params = new HashMap<String, String>();
@@ -23,5 +34,12 @@ public class TestHttpClient {
         Assert.assertNotNull(json);
         System.out.println(json);
     }
-    
+    @BeforeClass
+    public static void beforeClass(){
+        mockServer = startClientAndServer(port);
+    }
+    @AfterClass
+    public static void afterClass(){
+        mockServer.stop();
+    }    
 }

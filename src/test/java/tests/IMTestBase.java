@@ -3,7 +3,6 @@ package tests;
 import com.alibaba.fastjson.JSON;
 import net.bingosoft.oss.imclient.IMClient;
 import net.bingosoft.oss.imclient.IMConfig;
-import net.bingosoft.oss.imclient.IMUtil;
 import net.bingosoft.oss.imclient.model.AccessToken;
 import net.bingosoft.oss.imclient.model.MsgType;
 import net.bingosoft.oss.imclient.model.ObjectType;
@@ -23,7 +22,6 @@ import org.mockserver.model.HttpResponse;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.NottableString;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,30 +1,25 @@
 package net.bingosoft.oss.imclient;
 
 import com.alibaba.fastjson.JSON;
-import net.bingosoft.oss.imclient.exception.HttpRequestException;
 import net.bingosoft.oss.imclient.exception.InvalidCodeException;
 import net.bingosoft.oss.imclient.exception.SendMessageFailException;
 import net.bingosoft.oss.imclient.internal.HttpClient;
 import net.bingosoft.oss.imclient.model.AccessToken;
 import net.bingosoft.oss.imclient.model.ObjectType;
-import net.bingosoft.oss.imclient.model.SendMessage;
-import net.bingosoft.oss.imclient.model.msg.Content;
-import net.bingosoft.oss.imclient.spi.AccessTokenProvider;
-import net.bingosoft.oss.imclient.model.Message;
 import net.bingosoft.oss.imclient.model.Receipt;
+import net.bingosoft.oss.imclient.model.SendMessage;
+import net.bingosoft.oss.imclient.spi.AccessTokenProvider;
 import net.bingosoft.oss.imclient.spi.ContentDecoder;
 import net.bingosoft.oss.imclient.spi.MessageFetcher;
+import net.bingosoft.oss.imclient.spi.PollCallback;
 import net.bingosoft.oss.imclient.spi.impl.ImageContentDecoder;
 import net.bingosoft.oss.imclient.spi.impl.MultithreadingFetcher;
-import net.bingosoft.oss.imclient.spi.PollCallback;
 import net.bingosoft.oss.imclient.spi.impl.TextContentDecoder;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 消息服务客户端
@@ -103,14 +98,14 @@ public class IMClient {
     protected Receipt send(SendMessage message, String url){
         Map<String, String> headers = createHeaders();
         try {
-            String json = HttpClient.postJsonBody(url,IMUtil.toMessageMap(message),headers);
+            String json = HttpClient.postJsonBody(url,JSON.toJSONString(IMUtil.toMessageMap(message)),headers);
             Receipt receipt = JSON.parseObject(json,Receipt.class);
             if(receipt.isSuccess()){
                 return receipt;
             }else {
                 throw new SendMessageFailException("fail when send message:"+receipt.getErr());
             }
-        } catch (HttpRequestException e) {
+        } catch (HttpClient.HttpRequestException e) {
             throw new SendMessageFailException("fail when send message to ["+url+"]",e);
         }
     }

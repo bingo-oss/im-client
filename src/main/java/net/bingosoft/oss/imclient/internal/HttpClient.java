@@ -1,135 +1,156 @@
 package net.bingosoft.oss.imclient.internal;
 
 import com.alibaba.fastjson.JSON;
-import net.bingosoft.oss.imclient.exception.HttpRequestException;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.EntityBuilder;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.config.SocketConfig;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicNameValuePair;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URI;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
+ * 无依赖的HttpClient工具类
  * @author kael.
  */
 public class HttpClient {
 
-    protected static final org.apache.http.client.HttpClient https = https();
-    protected static final org.apache.http.client.HttpClient http = http();
-    
-    public static String postJsonBody(String url, Object body, Map<String, String> headers) throws HttpRequestException{
-        URI uri = URI.create(url);
-        HttpHost host = parseHost(uri);
-        HttpPost req = post(uri);
-        if(null != headers && headers.size() > 0){
-            for (Map.Entry<String,String> entry : headers.entrySet()){
-                req.addHeader(entry.getKey(),entry.getValue());
+
+    protected static final SSLSocketFactory ignoreCerSSLSocketFactory;
+    protected static final SSLSocketFactory defaultSSLSocketFactory;
+    static {
+        defaultSSLSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory();
+        // Create a trust manager that does not validate certificate chains  
+        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return new java.security.cert.X509Certificate[] {};
             }
-        }
-        HttpEntity entity = EntityBuilder.create().setContentType(ContentType.APPLICATION_JSON)
-                .setContentEncoding("UTF-8").setText(JSON.toJSONString(body)).build();
-        req.setEntity(entity);
-        return sendAndGetContent(req,host);
-    }
-    
-    public static String post(String url, Map<String, String> params, Map<String, String> headers) throws HttpRequestException{
-        URI uri = URI.create(url);
-        HttpHost host = parseHost(uri);
-        HttpPost req = post(uri);
-        if(null != params && params.size() > 0){
-            List<NameValuePair> nps = new ArrayList<NameValuePair>(params.size());
-            for (Map.Entry<String,String> entry : params.entrySet()){
-                nps.add(new BasicNameValuePair(entry.getKey(),entry.getValue()));
+            public void checkClientTrusted(X509Certificate[] chain, String authType)  {}
+            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
             }
-            req.setEntity(EntityBuilder.create().setParameters(nps).build());
-        }
-        if(null != headers && headers.size() > 0){
-            for (Map.Entry<String,String> entry : headers.entrySet()){
-                req.addHeader(entry.getKey(),entry.getValue());
-            }
-        }
-        return sendAndGetContent(req,host);
-    }
-    
-    public static String get(String url, Map<String, String> params, Map<String, String> headers) throws HttpRequestException{
-        URI uri = URI.create(url);
-        HttpHost host = parseHost(uri);
-        RequestBuilder builder = RequestBuilder.get().setUri(uri);
-        if(null != params && params.size() > 0){
-            for (Map.Entry<String,String> entry : params.entrySet()){
-                builder.addParameter(new BasicNameValuePair(entry.getKey(),entry.getValue()));
-            }
-        }
-        if(null != headers && headers.size() > 0){
-            for (Map.Entry<String,String> entry : headers.entrySet()){
-                builder.addHeader(entry.getKey(),entry.getValue());
-            }
-        }
-        HttpUriRequest request = builder.build();
-        return sendAndGetContent(request,host);
-    }
-    
-    protected static HttpResponse send(HttpRequest request, HttpHost host){
+        };
+        // Install the all-trusting trust manager  
         try {
-            if("https".equalsIgnoreCase(host.getSchemeName())){
-                return https.execute(host,request);
-            }else {
-                return http.execute(host,request);
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            ignoreCerSSLSocketFactory = sc.getSocketFactory();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public static String postJsonBody(String url, String body, Map<String, String> headers) throws HttpRequestException{
+        HttpURLConnection conn = openConnection(url);
+        headers.put("Content-Type","application/json; Charset=UTF-8");
+        preProcessConnection(conn,headers,"POST");
+        return sendAndGetContent(conn,body);
+    }
+    public static String post(String url, Map<String, String> params, Map<String, String> headers) throws HttpRequestException{
+        HttpURLConnection conn = openConnection(url);
+        preProcessConnection(conn,headers,"POST");
+        return sendAndGetContent(conn,urlencoded(params));
+    }
+    public static String get(String url, Map<String, String> params, Map<String, String> headers) throws HttpRequestException{
+        String ps = urlencoded(params);
+        int i = url.indexOf("?");
+        if(i < 0){
+            // url = http://example.com
+            url = url+"?"+ps;
+        }else if(i < url.length()-1){
+            // url = http://example.com?a=1
+            url = url + "&" + ps;
+        }else {
+            // url = http://example.com?
+            url = url + ps;
+        }
+        HttpURLConnection conn = openConnection(url);
+        preProcessConnection(conn,headers,"GET");
+        return sendAndGetContent(conn,null);
+    }
+    
+    protected static String urlencoded(Map<String, String> params){
+        if(null != params && params.size()>0){
+            StringBuilder encoded = new StringBuilder();
+            for(Map.Entry<String,String> entry:params.entrySet()){
+                encoded.append(entry.getKey());
+                encoded.append("=");
+                try {
+                    encoded.append(URLEncoder.encode(entry.getValue(),"UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
+                }
+                encoded.append("&");
             }
-        } catch (IOException e) {
+            if(encoded.length() > 0){
+                encoded.deleteCharAt(encoded.length()-1);
+            }
+            return encoded.toString();
+        }
+        return "";
+    }
+    
+    protected static void preProcessConnection(HttpURLConnection conn, Map<String, String> headers, String method) {
+        preProcessConnection(conn,headers,method,10000);
+    }
+    protected static void preProcessConnection(HttpURLConnection conn, Map<String, String> headers, String method,int timeout) {
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        try {
+            conn.setRequestMethod(method);
+        } catch (ProtocolException e) {
             throw new HttpRequestException(e);
         }
-    }
-
-    protected static HttpHost parseHost(URI uri){
-        String h = uri.getHost();
-        String scheme = uri.getScheme();
-        int port = uri.getPort();
-        return new HttpHost(h,port,scheme);
+        conn.setConnectTimeout(timeout);
+        if(null != headers && headers.size() > 0){
+            for(Map.Entry<String, String> entry : headers.entrySet()){
+                conn.setRequestProperty(entry.getKey(),entry.getValue());
+            }
+        }
     }
     
-    protected static String sendAndGetContent(HttpRequest request, HttpHost host){
-        HttpResponse response = send(request,host);
-        int code = response.getStatusLine().getStatusCode();
+    protected static String sendAndGetContent(HttpURLConnection conn,String body) {
         InputStream is = null;
         InputStreamReader isr = null;
         BufferedReader br = null;
         StringBuilder content = new StringBuilder();
+
+        OutputStream os = null;
+        OutputStreamWriter osw = null;
+        BufferedWriter bw = null;
+        
         try {
-            is = response.getEntity().getContent();
+            conn.connect();
+            if(null != body && !body.trim().isEmpty()){
+                os = conn.getOutputStream();
+                osw = new OutputStreamWriter(os,"UTF-8");
+                bw = new BufferedWriter(osw);
+                bw.write(body);
+                bw.flush();
+                osw.flush();
+                os.flush();
+            }
+            int code = conn.getResponseCode();
+            try {
+                is = conn.getInputStream();
+            } catch (IOException e) {
+                is = conn.getErrorStream();
+            }
             isr = new InputStreamReader(is,"UTF-8");
             br = new BufferedReader(isr);
             do{
@@ -138,15 +159,28 @@ public class HttpClient {
                     break;
                 }
                 content.append(line);
-                content.append("\n");
+                content.append('\n');
             }while (true);
-            if(content.length() > 0 && content.charAt(content.length()-1)=='\n'){
+            if(content.length() > 0){
                 content.deleteCharAt(content.length()-1);
             }
-        } catch (IOException e) {
+            if(code>=400){
+                throw new HttpRequestException("error status: " + code + "\n" + content.toString()).setStatus(code);
+            }
+            return content.toString();
+        }catch (Exception e){
             throw new HttpRequestException(e);
-        } finally {
+        }finally {
             try {
+                if(null != bw){
+                    bw.close();
+                }
+                if(null != osw){
+                    osw.close();
+                }
+                if(null != os){
+                    os.close();
+                }
                 if(null != br){
                     br.close();
                 }
@@ -156,73 +190,67 @@ public class HttpClient {
                 if(null != is){
                     is.close();
                 }
-            }catch (IOException e1){
-                throw new HttpRequestException("close input stream error",e1);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+            conn.disconnect();
         }
-        if(code>=400){
-            HttpRequestException exception = new HttpRequestException("error status: " + code + "\n" + content.toString());
-            exception.setStatus(code);
-            throw exception;
-        }
-        return content.toString();
-    }
-
-    protected static HttpGet get(URI uri){
-        return new HttpGet(uri);
-    }
-
-    protected static HttpPost post(URI uri){
-        return new HttpPost(uri);
     }
     
     private HttpClient() {}
-
-    public static org.apache.http.client.HttpClient http() {
-        return HttpClients.createDefault();
-    }
     
-    public static org.apache.http.client.HttpClient https() {
+    public static HttpURLConnection openConnection(String url){
+        URI uri = URI.create(url);
         try {
-            SSLContext sslContext = SSLContexts.custom().useTLS().loadTrustMaterial(null, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    return true;
-                }
-            }).build();
-            SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslContext,
-                    new AllowAllHostnameVerifier());
-
-            Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory>create()
-                    .register("https", sslConnectionSocketFactory)
-                    .build();
-            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(r);
-            cm.setMaxTotal(500);
-            cm.setDefaultMaxPerRoute(350);
-
-            SocketConfig socketConfig = SocketConfig.custom()
-                    .setSoKeepAlive(true)
-                    .setTcpNoDelay(true)
-                    .setSoTimeout(20000)
-                    .build();
-            cm.setDefaultSocketConfig(socketConfig);
-
-            RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(20000)
-                    .setConnectTimeout(20000).setSocketTimeout(20000).build();
-
-            CloseableHttpClient client = HttpClients.custom()
-                    .setConnectionManager(cm)
-                    .setDefaultRequestConfig(requestConfig)
-                    .build();
-            return client;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
+            URL u = uri.toURL();
+            HttpURLConnection conn = openIgnoreCerConnection(u);
+            return conn;
+        } catch (MalformedURLException e) {
+            throw new HttpRequestException(e);
+        } catch (IOException e) {
+            throw new HttpRequestException(e);
         }
-        return null;
     }
     
+    public static HttpURLConnection openIgnoreCerConnection(URL url) throws IOException {
+        if("https".equalsIgnoreCase(url.getProtocol())){
+            HttpsURLConnection.setDefaultSSLSocketFactory(ignoreCerSSLSocketFactory);
+            URLConnection connection;
+            try {
+                connection = url.openConnection();
+            } finally {
+                HttpsURLConnection.setDefaultSSLSocketFactory(defaultSSLSocketFactory);
+            }
+            return (HttpsURLConnection)connection;
+        }else if("http".equalsIgnoreCase(url.getProtocol())){
+            return (HttpURLConnection)url.openConnection();
+        }else {
+            throw new ProtocolException("not support protocol:"+url.getProtocol());
+        }
+    }
+    public static class HttpRequestException extends RuntimeException {
+
+        private int status;
+
+        public HttpRequestException(String message) {
+            super(message);
+        }
+
+        public HttpRequestException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public HttpRequestException(Throwable cause) {
+            super(cause);
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public HttpRequestException setStatus(int status) {
+            this.status = status;
+            return this;
+        }
+    }
 }

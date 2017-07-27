@@ -26,7 +26,6 @@
 | ------- | ------- | ------- |  
 |fastjson | 1.2.31+ | JSON解析 |
 |httpclient| 4.3.6+  | http请求 |      
-|commons-codec | 1.10+ | Base64解码 |
 
 ## 前提条件
 

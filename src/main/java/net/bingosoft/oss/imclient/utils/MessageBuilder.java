@@ -42,6 +42,13 @@ public class MessageBuilder {
     protected Set<String> atUserIds = new HashSet<String>();
 
     /**
+     * 自定义消息
+     */
+    public static MessageBuilder custom(){
+        return new MessageBuilder();
+    }
+    
+    /**
      * 用户消息
      */
     public static MessageBuilder userMessage(){

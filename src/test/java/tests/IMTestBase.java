@@ -4,9 +4,14 @@ import com.alibaba.fastjson.JSON;
 import net.bingosoft.oss.imclient.IMClient;
 import net.bingosoft.oss.imclient.IMConfig;
 import net.bingosoft.oss.imclient.model.AccessToken;
+import net.bingosoft.oss.imclient.model.DeviceType;
 import net.bingosoft.oss.imclient.model.MsgType;
 import net.bingosoft.oss.imclient.model.ObjectType;
+import net.bingosoft.oss.imclient.model.ReceiveMessage;
 import net.bingosoft.oss.imclient.model.SendMessage;
+import net.bingosoft.oss.imclient.model.msg.Content;
+import net.bingosoft.oss.imclient.model.msg.Image;
+import net.bingosoft.oss.imclient.model.msg.Text;
 import net.bingosoft.oss.imclient.spi.AccessTokenProvider;
 import net.bingosoft.oss.imclient.utils.MessageBuilder;
 import org.mockserver.integration.ClientAndServer;
@@ -18,6 +23,7 @@ import org.mockserver.model.HttpResponse;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.NottableString;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +57,10 @@ public abstract class IMTestBase {
     // protected static final ClientAndServer uaServer = startClientAndServer(7090);
     // protected static final ClientAndProxy proxy = startClientAndProxy(1090);
     static {
-        HttpRequest request = request().withMethod("POST").withPath("/private/send");
-        imServer.when(request).callback(HttpClassCallback.callback(UserSendCallback.class.getName()));
+        HttpRequest send = request().withMethod("POST").withPath("/private/send");
+        HttpRequest poll = request().withMethod("GET").withPath("/private/poll");
+        imServer.when(send).callback(HttpClassCallback.callback(UserSendCallback.class.getName()));
+        imServer.when(poll).callback(HttpClassCallback.callback(UserPollCallback.class.getName()));
     }
     
     protected final Header header1;
@@ -87,7 +95,7 @@ public abstract class IMTestBase {
         client = new IMClient(config,tp);
     }
     
-    protected SendMessage createSendMessage(String senderId, String senderName, String receiverId, String receiverName){
+    protected static SendMessage createSendMessage(String senderId, String senderName, String receiverId, String receiverName){
         return MessageBuilder.userMessage()
                 .setFromId(senderId)
                 .setFromCompany("品高")
@@ -111,6 +119,38 @@ public abstract class IMTestBase {
 
                 .build();
     }
+    
+    protected static Map<String, Object> createReceiveMessage(int fromType,int msgType, Content content){
+        Map<String, Object> rm = new HashMap<String, Object>();
+        rm.put("task_id",UUID.randomUUID().toString());
+        rm.put("msg_type",UUID.randomUUID().toString());
+        rm.put("msg_type",msgType);
+
+        rm.put("content",content);
+
+        rm.put("from_type",fromType);
+        rm.put("from_id",UUID.randomUUID().toString());
+        rm.put("from_company",UUID.randomUUID().toString());
+        rm.put("from_name",UUID.randomUUID().toString());
+
+        rm.put("to_id",UUID.randomUUID().toString());
+        rm.put("to_type",ObjectType.USER);
+        rm.put("to_name",UUID.randomUUID().toString());
+        rm.put("to_company",UUID.randomUUID().toString());
+
+        rm.put("rec_receipt",false);
+        rm.put("is_count_unread",true);
+        rm.put("is_delete_after_read",false);
+        rm.put("is_need_read_receipt",false);
+
+        rm.put("to_device_types",DeviceType.DESKTOP);
+        rm.put("at_user_ids",null);
+
+        rm.put("send_time",System.currentTimeMillis());
+        rm.put("is_read",0);
+        return rm;
+    }
+    
     protected AccessToken createAccessToken(String at, String rt, long exp, String type){
         AccessToken accessToken = new AccessToken();
         accessToken.setAccessToken(at);
@@ -164,6 +204,39 @@ public abstract class IMTestBase {
         protected final Map<String, Object> fail;
         public UserSendCallback() {
             success = createReceipt(true,"");
+            fail = createReceipt(false,"bad request");
+        }
+        protected Map<String, Object> createReceipt(boolean success, String err){
+            Map<String, Object> receipt = new HashMap<String, Object>();
+            receipt.put("success",success);
+            receipt.put("err",err);
+            return receipt;
+        }
+    }
+    public static class UserPollCallback implements ExpectationCallback{
+        @Override
+        public HttpResponse handle(HttpRequest httpRequest) {
+            if(IMTestBase.invalidAt(httpRequest)){
+                return response().withStatusCode(401).withBody(JsonBody.json(fail));
+            }
+            if(IMTestBase.invalidMessage(httpRequest)){
+                return response().withStatusCode(401).withBody(JsonBody.json(fail));
+            }
+            return response().withStatusCode(200).withBody(JsonBody.json(success));
+        }
+        protected final List<Map<String, Object>> success;
+        protected final Map<String, Object> fail;
+        public UserPollCallback() {
+            success = new ArrayList<Map<String, Object>>();
+            success.add(createReceiveMessage(ObjectType.USER,MsgType.TEXT,new Text("你好")));
+            
+            Image image = new Image();
+            image.setDownloadUrl("image_download");
+            image.setExtension("png");
+            image.setFileName("image_file_name");
+            image.setSize(1000L);
+            success.add(createReceiveMessage(ObjectType.USER,MsgType.IMAGE,image));
+            success.add(createReceiveMessage(ObjectType.USER,MsgType.JITTER,Content.EMPTY));
             fail = createReceipt(false,"bad request");
         }
         protected Map<String, Object> createReceipt(boolean success, String err){

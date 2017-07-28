@@ -21,15 +21,22 @@ import java.util.Map;
  * @author kael.
  */
 public class IMUtil {
-    
+
     public static Map<String, Object> toMessageMap(SendMessage message){
+        return toMessageMap(message,true);
+    }
+    
+    public static Map<String, Object> toMessageMap(SendMessage message, boolean encrypt){
         Map<String, Object> map = new HashMap<String, Object>();
         
         map.put("task_id",message.getTaskId());
         map.put("msg_id",message.getMsgId());
         map.put("msg_type",message.getMsgType());
-        
-        map.put("content",message.getContent().encryptContent());
+        if(encrypt){
+            map.put("content",message.getContent().encryptContent());
+        }else {
+            map.put("content",message.getContent().toContentString());
+        }
         
         map.put("from_type",message.getFromType());
         map.put("from_id",message.getFromId());

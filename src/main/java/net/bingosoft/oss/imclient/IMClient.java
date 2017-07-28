@@ -5,9 +5,11 @@ import net.bingosoft.oss.imclient.exception.InvalidCodeException;
 import net.bingosoft.oss.imclient.exception.SendMessageFailException;
 import net.bingosoft.oss.imclient.internal.HttpClient;
 import net.bingosoft.oss.imclient.model.AccessToken;
+import net.bingosoft.oss.imclient.model.IdTypes;
 import net.bingosoft.oss.imclient.model.ObjectType;
 import net.bingosoft.oss.imclient.model.Receipt;
 import net.bingosoft.oss.imclient.model.SendMessage;
+import net.bingosoft.oss.imclient.model.SendTo;
 import net.bingosoft.oss.imclient.spi.AccessTokenProvider;
 import net.bingosoft.oss.imclient.spi.ContentDecoder;
 import net.bingosoft.oss.imclient.spi.MessageFetcher;
@@ -67,16 +69,60 @@ public class IMClient {
     }
     
     /**
-     * 发送消息 
+     * 个人发送消息 
      * @throws SendMessageFailException 发送消息失败
      */
     public Receipt send(SendMessage message) throws SendMessageFailException{
         if(message.getFromType() == ObjectType.USER){
             return userSend(message);
-        }else if(message.getFromType() == ObjectType.SNO){
-            return snoSend(message);
         }else {
             throw new UnsupportedOperationException("not supported for message from type:" + message.getFromType());
+        }
+    }
+    /**
+     * 服务号发消息
+     */
+    public Receipt snoSend(SendMessage message, SendTo sendTo) throws SendMessageFailException{
+        Map<String, String> headers = createHeaders();
+        Map<String, String> params = new HashMap<String, String>();
+        
+        StringBuilder ids = new StringBuilder();
+        StringBuilder names = new StringBuilder();
+        StringBuilder msgIds = new StringBuilder();
+
+        for(SendTo.Receiver receiver : sendTo.getReceivers()){
+            ids.append(receiver.getId()+",");
+            names.append(receiver.getName()+",");
+            msgIds.append(receiver.getMsgId()+",");
+        }
+        int length = ids.length();
+        if(length > 0){
+            ids.deleteCharAt(ids.length()-1);
+            names.deleteCharAt(names.length()-1);
+            msgIds.deleteCharAt(msgIds.length()-1);
+        }
+        if(sendTo.getIdType() == IdTypes.USER_ID){
+            params.put("userIds",ids.toString());
+        }else if(sendTo.getIdType() == IdTypes.LOGIN_ID){
+            params.put("loginIds",ids.toString());
+        }else {
+            throw new SendMessageFailException("Not support id_type:"+sendTo.getIdType());
+        }
+        params.put("id_type",sendTo.getIdType()+"");
+        params.put("userNames",names.toString());
+        params.put("msgIds",msgIds.toString());
+        params.put("message",JSON.toJSONString(IMUtil.toMessageMap(message,false)));
+        String json;
+        try {
+            json = HttpClient.post(config.getSnoUrl(),params,headers);
+        } catch (HttpClient.HttpRequestException e) {
+            throw new SendMessageFailException("fail when send message to ["+config.getSnoUrl()+"]",e);
+        }
+        Receipt receipt = JSON.parseObject(json,Receipt.class);
+        if(receipt.isSuccess()){
+            return receipt;
+        }else {
+            throw new SendMessageFailException("fail when send message:"+receipt.getErr());
         }
     }
     
@@ -86,13 +132,6 @@ public class IMClient {
      */
     protected Receipt userSend(SendMessage message){
         return send(message,config.getUserUrl());
-    }
-
-    /**
-     * 服务号发消息
-     */
-    protected Receipt snoSend(SendMessage message){
-        return send(message,config.getSnoUrl());
     }
 
     protected Receipt send(SendMessage message, String url){

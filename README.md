@@ -147,7 +147,7 @@ String userId2 = "...";//用户2的id
 
 IMClient sno = new IMClient(config, snoTp,snoAt);
 
-Message msg = MessageBuilder.userMessage()
+Message msg = MessageBuilder.snoMessage()
         .setFromId(snoId)
         .setFromCompany("佛山有限公司")
         .setFromName(snoName)

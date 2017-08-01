@@ -161,7 +161,7 @@ Message msg = MessageBuilder.snoMessage()
         .setRecReceipt(false)
         .setIsNeedReadReceipt(false)
 
-        .setContent(msg)
+        .setContent(new Text("你好"))
 
         .build();
 

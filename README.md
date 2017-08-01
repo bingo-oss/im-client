@@ -134,6 +134,44 @@ receiver.poll(new AbstractPollCallback() {
 
 > 使用获取消息接口需要传入回调对象`PollCallback`，这个接口的具体使用方式请看源码注释。
 
+### 3. 发送服务号消息
+
+发送服务号消息和用户消息不同，除了`Message`对象之外还需要构造`SendTo`对象，指定发给某些人。
+
+```java
+String snoId = "...";//服务号ID
+String snoName = "...";//服务号名称
+
+String userId1 = "...";//用户1的id
+String userId2 = "...";//用户2的id
+
+IMClient sno = new IMClient(config, snoTp,snoAt);
+
+Message msg = MessageBuilder.userMessage()
+        .setFromId(snoId)
+        .setFromCompany("佛山有限公司")
+        .setFromName(snoName)
+
+        .setMsgType(5)
+        .setMsgId(UUID.randomUUID().toString())
+        .setTaskId(UUID.randomUUID().toString())
+
+        .setIsCountUnread(true)
+        .setIsDeleteAfterRead(false)
+        .setRecReceipt(false)
+        .setIsNeedReadReceipt(false)
+
+        .setContent(msg)
+
+        .build();
+
+SendTo sendTo = SendTo.useUserId().addReceiver(userId1,"用户1",UUID.randomUUID().toString())
+                .addReceiver(userId2,"用户2",UUID.randomUUID().toString());
+
+sno.snoSend(msg,sendTo);
+```
+
+
 ## 扩展定制
 
 在使用即时消息客户端的过程，有些时候默认的实现可能不满足使用需求，客户端允许对某些功能进行定制。

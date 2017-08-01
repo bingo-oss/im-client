@@ -106,7 +106,7 @@ Message msg = MessageBuilder.userMessage()
     .setRecReceipt(false)
     .setIsNeedReadReceipt(false)
 
-    .setContent(msg)
+    .setContent(new Text("你好"))
 
     .build();
 

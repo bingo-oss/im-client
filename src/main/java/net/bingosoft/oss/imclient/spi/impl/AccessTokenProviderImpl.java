@@ -45,7 +45,7 @@ public class AccessTokenProviderImpl implements AccessTokenProvider {
     public AccessToken obtainAccessTokenByClientCredentials(){
         Map<String, String> headers = createHeaders();
         Map<String, String> params = new HashMap<String, String>();
-        params.put("grant_type", "client_credentials");
+        params.put("grant_type", "client_credential");
         try {
             String json = HttpClient.post(tokenUrl,params,headers);
             return parseToAccessToken(json);

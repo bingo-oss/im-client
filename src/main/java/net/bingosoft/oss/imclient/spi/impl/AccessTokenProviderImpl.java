@@ -1,17 +1,17 @@
 package net.bingosoft.oss.imclient.spi.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import net.bingosoft.oss.imclient.IMConfig;
+
 import net.bingosoft.oss.imclient.exception.InvalidCodeException;
 import net.bingosoft.oss.imclient.internal.Base64;
 import net.bingosoft.oss.imclient.internal.HttpClient;
 import net.bingosoft.oss.imclient.model.AccessToken;
 import net.bingosoft.oss.imclient.spi.AccessTokenProvider;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author kael.

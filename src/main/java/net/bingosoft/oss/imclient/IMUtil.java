@@ -1,19 +1,16 @@
 package net.bingosoft.oss.imclient;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.bingosoft.oss.imclient.internal.Base64;
 import net.bingosoft.oss.imclient.model.MsgType;
 import net.bingosoft.oss.imclient.model.ObjectType;
 import net.bingosoft.oss.imclient.model.ReceiveMessage;
 import net.bingosoft.oss.imclient.model.SendMessage;
 import net.bingosoft.oss.imclient.model.msg.Content;
-import net.bingosoft.oss.imclient.model.msg.Image;
 import net.bingosoft.oss.imclient.model.msg.Text;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 

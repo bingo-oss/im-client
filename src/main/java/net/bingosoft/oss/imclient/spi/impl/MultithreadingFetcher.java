@@ -38,7 +38,8 @@ public class MultithreadingFetcher implements MessageFetcher {
         }
         final Map<String, String> headers = client.createHeaders();
         pollMsgThread = new Thread(new Runnable() {
-            @Override
+            @SuppressWarnings("rawtypes")
+			@Override
             public void run() {
             do {
                 try {

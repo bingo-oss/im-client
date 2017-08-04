@@ -33,7 +33,8 @@ public class IMClient {
     protected AccessTokenProvider tp;
     protected AccessToken at;
     protected MessageFetcher fetcher;
-    protected final Set<ContentDecoder> decoders = new HashSet<ContentDecoder>();
+    @SuppressWarnings("rawtypes")
+	protected final Set<ContentDecoder> decoders = new HashSet<ContentDecoder>();
     
     /**
      * 创建一个{@link IMClient}对象，并自动获取一个代表应用身份的at
@@ -55,7 +56,8 @@ public class IMClient {
     /**
      * 注册一个新的消息解码器，可以用来覆盖默认的消息解码器，也可以扩展新的消息解码器
      */
-    public void registerContentDecoder(ContentDecoder decoder){
+    @SuppressWarnings("rawtypes")
+	public void registerContentDecoder(ContentDecoder decoder){
         decoders.add(decoder);
     }
     
@@ -79,6 +81,7 @@ public class IMClient {
             throw new UnsupportedOperationException("not supported for message from type:" + message.getFromType());
         }
     }
+    
     /**
      * 服务号发消息
      */
@@ -125,6 +128,28 @@ public class IMClient {
             throw new SendMessageFailException("fail when send message:"+receipt.getErr());
         }
     }
+    
+    /**
+     * 服务号发消息给粉丝
+     */
+	public Receipt snoSend2fans(SendMessage message) throws SendMessageFailException {
+		Map<String, String> headers = createHeaders();
+		Map<String, String> params = new HashMap<String, String>();
+
+		params.put("message", JSON.toJSONString(IMUtil.toMessageMap(message, false)));
+		String json;
+		try {
+			json = HttpClient.post(config.getSno2fansUrl(), params, headers);
+		} catch (HttpClient.HttpRequestException e) {
+			throw new SendMessageFailException("fail when send message to [" + config.getSnoUrl() + "]", e);
+		}
+		Receipt receipt = JSON.parseObject(json, Receipt.class);
+		if (receipt.isSuccess()) {
+			return receipt;
+		} else {
+			throw new SendMessageFailException("fail when send message:" + receipt.getErr());
+		}
+	}
     
     /**========================= 内部方法 ==============================**/
     /**
@@ -196,7 +221,8 @@ public class IMClient {
         this.fetcher = fetcher;
     }
 
-    public Set<ContentDecoder> getDecoders() {
+    @SuppressWarnings("rawtypes")
+	public Set<ContentDecoder> getDecoders() {
         return decoders;
     }
 }

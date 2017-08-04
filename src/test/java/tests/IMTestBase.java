@@ -1,19 +1,15 @@
 package tests;
 
-import com.alibaba.fastjson.JSON;
-import net.bingosoft.oss.imclient.IMClient;
-import net.bingosoft.oss.imclient.IMConfig;
-import net.bingosoft.oss.imclient.model.AccessToken;
-import net.bingosoft.oss.imclient.model.DeviceType;
-import net.bingosoft.oss.imclient.model.MsgType;
-import net.bingosoft.oss.imclient.model.ObjectType;
-import net.bingosoft.oss.imclient.model.ReceiveMessage;
-import net.bingosoft.oss.imclient.model.SendMessage;
-import net.bingosoft.oss.imclient.model.msg.Content;
-import net.bingosoft.oss.imclient.model.msg.Image;
-import net.bingosoft.oss.imclient.model.msg.Text;
-import net.bingosoft.oss.imclient.spi.AccessTokenProvider;
-import net.bingosoft.oss.imclient.utils.MessageBuilder;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.mock.action.ExpectationCallback;
 import org.mockserver.model.Header;
@@ -23,15 +19,20 @@ import org.mockserver.model.HttpResponse;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.NottableString;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
 
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
+import net.bingosoft.oss.imclient.IMClient;
+import net.bingosoft.oss.imclient.IMConfig;
+import net.bingosoft.oss.imclient.model.AccessToken;
+import net.bingosoft.oss.imclient.model.DeviceType;
+import net.bingosoft.oss.imclient.model.MsgType;
+import net.bingosoft.oss.imclient.model.ObjectType;
+import net.bingosoft.oss.imclient.model.SendMessage;
+import net.bingosoft.oss.imclient.model.msg.Content;
+import net.bingosoft.oss.imclient.model.msg.Image;
+import net.bingosoft.oss.imclient.model.msg.Text;
+import net.bingosoft.oss.imclient.spi.AccessTokenProvider;
+import net.bingosoft.oss.imclient.utils.MessageBuilder;
 
 /**
  * @author kael.
@@ -180,7 +181,8 @@ public abstract class IMTestBase {
         return true;
     }
     
-    protected static boolean invalidMessage(HttpRequest request){
+    @SuppressWarnings("unchecked")
+	protected static boolean invalidMessage(HttpRequest request){
         Object value = request.getBody().getValue();
         Map<String, Object> map = JSON.parseObject(value.toString(),Map.class);
         if("error".equalsIgnoreCase((String) map.get("from_id"))) {

@@ -1,12 +1,5 @@
 package net.bingosoft.oss.imclient.internal;
 
-import com.alibaba.fastjson.JSON;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,6 +17,12 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * 无依赖的HttpClient工具类
@@ -232,7 +231,8 @@ public class HttpClient {
             throw new ProtocolException("not support protocol:"+url.getProtocol());
         }
     }
-    public static class HttpRequestException extends RuntimeException {
+    @SuppressWarnings("serial")
+	public static class HttpRequestException extends RuntimeException {
 
         private int status;
 

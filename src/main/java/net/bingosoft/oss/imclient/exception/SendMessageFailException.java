@@ -3,7 +3,9 @@ package net.bingosoft.oss.imclient.exception;
 /**
  * @author kael.
  */
+@SuppressWarnings("serial")
 public class SendMessageFailException extends RuntimeException {
+	
     public SendMessageFailException(String message) {
         super(message);
     }

@@ -37,10 +37,12 @@ public class IMUtil {
         
         map.put("from_type",message.getFromType());
         map.put("from_id",message.getFromId());
-        map.put("from_company",message.getFromCompany());
         map.put("from_name",message.getFromName());
+        map.put("from_company",message.getFromCompany());
+        map.put("from_device",message.getFromDevice());
         
         map.put("to_id",message.getToId());
+        map.put("toIds",message.getToIds());
         map.put("to_type",message.getToType());
         map.put("to_name",message.getToName());
         map.put("to_company",message.getToCompany());

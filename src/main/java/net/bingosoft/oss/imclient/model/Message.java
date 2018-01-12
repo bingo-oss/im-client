@@ -52,6 +52,12 @@ public abstract class Message {
      * 消息发送者企业，企业互连必须字段
      */
     protected String fromCompany;
+    
+    /**
+     * from_device
+     * 消息发送者企业，企业互连必须字段
+     */
+    protected String fromDevice;
 
     /**
      * to_type
@@ -65,7 +71,7 @@ public abstract class Message {
      * 消息接收者标识
      */
     protected String toId;
-
+    
     /**
      * to_name
      * 消息接收者名称
@@ -84,8 +90,6 @@ public abstract class Message {
      * @see DeviceType
      */
     protected String toDeviceTypes;
-
-
 
     /**
      * rec_receipt
@@ -180,7 +184,15 @@ public abstract class Message {
         this.fromCompany = fromCompany;
     }
 
-    public int getToType() {
+    public String getFromDevice() {
+		return fromDevice;
+	}
+
+	public void setFromDevice(String fromDevice) {
+		this.fromDevice = fromDevice;
+	}
+
+	public int getToType() {
         return toType;
     }
 
@@ -267,5 +279,4 @@ public abstract class Message {
     public void setAtUserIds(String atUserIds) {
         this.atUserIds = atUserIds;
     }
-    
 }

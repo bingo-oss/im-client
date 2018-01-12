@@ -1,0 +1,1 @@
+mvn clean install -Pprod -Dmaven.test.skip=true -e

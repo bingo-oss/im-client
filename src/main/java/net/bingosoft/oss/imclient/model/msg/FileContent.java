@@ -36,12 +36,16 @@ public abstract class FileContent extends Content {
 
     @Override
     public String toContentString() {
+        return JSON.toJSONString(toContentMap());
+    }
+    
+    protected Map<String, Object> toContentMap() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("file_name",fileName);
         map.put("size",size);
         map.put("download_url",downloadUrl);
         map.put("extension",extension);
-        return JSON.toJSONString(map);
+        return map;
     }
 
     public String getFileName() {

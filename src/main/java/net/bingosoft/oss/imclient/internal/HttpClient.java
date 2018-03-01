@@ -166,7 +166,7 @@ public class HttpClient {
                 content.deleteCharAt(content.length()-1);
             }
             if(code>=400){
-                throw new HttpRequestException("error status: " + code + "\n" + content.toString()).setStatus(code);
+                throw new HttpRequestException(String.join("", "error status: ", String.valueOf(code), ", url: ", conn.getURL().toString(), "\n", content.toString())).setStatus(code);
             }
             return content.toString();
         }catch (HttpRequestException e){

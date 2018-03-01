@@ -38,7 +38,7 @@
 		<tag>HEAD</tag>
 	</scm>
 
-	<distributionManagement>
+	<!-- <distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -47,7 +47,18 @@
 			<id>ossrh</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
-	</distributionManagement>
+	</distributionManagement> -->
+	
+	<distributionManagement>
+        <repository>
+            <id>bingo-maven-repository-releases</id>
+            <url>https://maven.bingosoft.net/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>bingo-maven-repository-snapshots</id>
+            <url>https://maven.bingosoft.net/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 	<dependencies>
 		<!-- json解析 -->

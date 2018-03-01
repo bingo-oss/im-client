@@ -38,7 +38,7 @@ public class AccessTokenProviderImpl implements AccessTokenProvider {
             String json = HttpClient.post(tokenUrl,params,headers);
             return parseToAccessToken(json);
         } catch (Exception e) {
-            throw new InvalidCodeException("refresh token error:",e);
+            throw new InvalidCodeException("refresh token error:"+tokenUrl,e);
         }
     }
     @Override

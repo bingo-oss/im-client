@@ -33,6 +33,12 @@ public abstract class FileContent extends Content {
      * 文件扩展名
      */
     protected String extension;
+    
+    /**
+     * cipher_key
+     * 加密密钥key。默认为空。目前在公安行业可能会用到，接收方需要使用cipher_key对多媒体进行解密。
+     */
+    protected String cipherKey;
 
     @Override
     public String toContentString() {
@@ -45,6 +51,7 @@ public abstract class FileContent extends Content {
         map.put("size",size);
         map.put("download_url",downloadUrl);
         map.put("extension",extension);
+        map.put("cipher_key",cipherKey);
         return map;
     }
 
@@ -79,4 +86,12 @@ public abstract class FileContent extends Content {
     public void setExtension(String extension) {
         this.extension = extension;
     }
+
+	public String getCipherKey() {
+		return cipherKey;
+	}
+
+	public void setCipherKey(String cipherKey) {
+		this.cipherKey = cipherKey;
+	}
 }

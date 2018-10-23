@@ -78,6 +78,10 @@ public interface MsgType {
      */
     int RETRACT = 66;
     /**
+     * 已读消息
+     */
+    int RECREAD = 95;
+    /**
      * 混合消息
      */
     int MIXTURE = 96;

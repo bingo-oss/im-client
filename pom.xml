@@ -53,11 +53,11 @@
 	<distributionManagement>
         <repository>
             <id>bingo-maven-repository-releases</id>
-            <url>https://maven.bingosoft.net/content/repositories/releases/</url>
+            <url>http://maven.bingosoft.net/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>bingo-maven-repository-snapshots</id>
-            <url>https://maven.bingosoft.net/content/repositories/snapshots/</url>
+            <url>http://maven.bingosoft.net/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 

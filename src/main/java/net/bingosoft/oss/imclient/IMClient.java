@@ -181,12 +181,15 @@ public class IMClient {
     }
     
     protected AccessToken at(){
-        /*if(null == at){
-            at = tp.obtainAccessTokenByClientCredentials();
-        }
-        if(at.isExpired()){
-            at = tp.refreshAccessToken(at);
-        }*/
+        return at(false);
+    }
+    
+    public AccessToken at(boolean isForceRefresh){
+    	if(isForceRefresh) {
+    		at = tp.obtainAccessTokenByClientCredentials();
+    		return at;
+    	}
+    	
     	// 当刷新token的时候，sso有时候会返回500错误，改成获取新token
     	if(null == at || at.isExpired()){
             at = tp.obtainAccessTokenByClientCredentials();

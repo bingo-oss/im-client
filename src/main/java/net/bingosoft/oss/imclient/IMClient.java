@@ -184,6 +184,11 @@ public class IMClient {
         return at(false);
     }
     
+    /**
+     * 允许手动调用该方法刷新AccessToken
+     * @param isForceRefresh 是否强制刷新AccessToken
+     * @return
+     */
     public AccessToken at(boolean isForceRefresh){
     	if(isForceRefresh) {
     		at = tp.obtainAccessTokenByClientCredentials();

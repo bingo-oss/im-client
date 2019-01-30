@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.bingosoft.oss</groupId>
 	<artifactId>im-client</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 
 	<name>im-client</name>
 	<description>im client sdk for bingosoft's instant messaging server.</description>

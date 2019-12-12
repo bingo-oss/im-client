@@ -29,4 +29,8 @@ public interface ObjectType {
      * 服务号
      */
     int SNO     = 5;
+    /**
+     * 机器人
+     */
+    int ROBOT   = 7;
 }

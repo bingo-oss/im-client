@@ -83,6 +83,18 @@ public class IMClient {
     }
     
     /**
+     * 机器人发送消息 
+     * @throws SendMessageFailException 发送消息失败
+     */
+    public Receipt robotSend(SendMessage message) throws SendMessageFailException{
+        if(message.getFromType() == ObjectType.ROBOT){
+            return userSend(message);
+        }else {
+            throw new UnsupportedOperationException("not supported for message from type:" + message.getFromType());
+        }
+    }
+    
+    /**
      * 服务号发消息
      */
     public Receipt snoSend(SendMessage message, SendTo sendTo) throws SendMessageFailException{

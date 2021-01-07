@@ -55,6 +55,9 @@ public class IMUtil {
         map.put("to_device_types",message.getToDeviceTypes());
         map.put("at_user_ids",message.getAtUserIds());
         
+        map.put("is_hint_4_old_client",message.isHint4OldClient());
+        map.put("protocol_version_since",message.getProtocolVersionSince());
+        
         return map;
     }
 
@@ -87,6 +90,9 @@ public class IMUtil {
         rm.setToDeviceTypes((String)map.get("to_device_types"));
         rm.setAtUserIds((String)map.get("at_user_ids"));
         
+        rm.setHint4OldClient(objectToBoolean(map.get("is_hint_4_old_client"), true));
+        rm.setProtocolVersionSince(objectToDouble(map.get("protocol_version_since"), 0));
+        
         rm.setSendTime(objectToLong(map.get("send_time"),System.currentTimeMillis()));
         rm.setIsRead(objectToInt(map.get("is_read"),0));
         return rm;
@@ -105,10 +111,20 @@ public class IMUtil {
     public static long objectToLong(Object o,long def){
         if(null == o){
             return def;
-        }else if(o instanceof Integer){
+        }else if(o instanceof Long){
             return (Long) o;
         }else {
             return Long.parseLong(o.toString());
+        }
+    }
+    
+    public static double objectToDouble(Object o, double def){
+        if(null == o){
+            return def;
+        }else if(o instanceof Double){
+            return (Double) o;
+        }else {
+            return Double.parseDouble(o.toString());
         }
     }
     
@@ -135,7 +151,6 @@ public class IMUtil {
     }
     
     public static String decryptContent(String content){
-
         try {
             if(null == content || content.isEmpty()){
                 return "";
@@ -148,6 +163,5 @@ public class IMUtil {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-         
     }
 }

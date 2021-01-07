@@ -119,6 +119,12 @@ public abstract class Message {
      * 艾特用户ID，多个人用逗号分隔；ALL代表全体成员
      */
     protected String atUserIds;
+    
+    /**DEFAULT:true。新增的消息类型是否在旧版客户端进行友好提示，例如:"您无法查看此消息，请升级最新版客户端尝试。"*/
+    private boolean isHint4OldClient = true;
+    
+    /**从哪个消息协议版本号开始支持*/
+    protected double protocolVersionSince;
 
     public String getTaskId() {
         return taskId;
@@ -279,4 +285,20 @@ public abstract class Message {
     public void setAtUserIds(String atUserIds) {
         this.atUserIds = atUserIds;
     }
+
+	public boolean isHint4OldClient() {
+		return isHint4OldClient;
+	}
+
+	public void setHint4OldClient(boolean isHint4OldClient) {
+		this.isHint4OldClient = isHint4OldClient;
+	}
+
+	public double getProtocolVersionSince() {
+		return protocolVersionSince;
+	}
+
+	public void setProtocolVersionSince(double protocolVersionSince) {
+		this.protocolVersionSince = protocolVersionSince;
+	}
 }
